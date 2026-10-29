@@ -144,12 +144,15 @@ if __name__ == '__main__':
 
 @app.route('/files')
 def files():
-    path = f'{Path(__file__).parent}'
-    file_path = path + "\\files"
-    print(file_path)
-    fichier = []
-    for item in os.listdir(file_path):
-        fichier.append(item)
+    # Utilisation correcte et robuste de pathlib pour trouver le dossier 'files'
+    file_path = Path(__file__).parent / "files"
+    print(f"Chemin cherché : {file_path}")
+    
+    # Vérification si le dossier existe pour éviter un crash
+    if not file_path.exists():
+        os.makedirs(file_path, exist_ok=True) # Crée le dossier s'il n'existe pas
+        
+    fichier = [item for item in os.listdir(file_path)]
     return render_template('files.html', files=fichier)
 
 
